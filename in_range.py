@@ -3,7 +3,7 @@ import numpy as np
 
 # ejercicio 4
 # Generar una imagen binaria con dos umbrales con inRange, para segmentar un objeto por su color en el espacio HSV
-image = cv.imread('messi.jpg')
+image = cv.imread('static/images/messi.jpg')
 hsv = cv.cvtColor(image, cv.COLOR_BGR2HSV)
 # define range of blue color in HSV
 lower_blue = np.array([110, 50, 50])
