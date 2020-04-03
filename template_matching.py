@@ -23,7 +23,7 @@ import cv2
 # si van a copiar este codigo para probarlo,
 # cambien la foto que levantan con el cv2,
 # pongan una que ustedes tengan
-img = cv2.imread("img/boca2000.jpg")
+img = cv2.imread("static/images/boca2000.jpg")
 (h, w, d) = img.shape
 roi = img[int(h/2-50):int(h/2+50), int(w/2-50):int(w/2+50)]
 
