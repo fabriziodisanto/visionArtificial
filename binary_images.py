@@ -7,14 +7,14 @@ alpha_slider_max = 100
 
 # muestra una imagen binaria normal y controla umbral con trackbar
 def binary(val):
-    image = cv.imread('messi.jpg')
+    image = cv.imread('img/messi.jpg')
     gray = cv.cvtColor(image, cv.COLOR_RGB2GRAY)
     ret1, thresh1 = cv.threshold(gray, val, 255, cv.THRESH_BINARY)
     cv.imshow("Binary", thresh1)
 
 # muestra una imagen binaria invertida y controla umbral con trackbar
 def binary_inv(val):
-    image = cv.imread('messi.jpg')
+    image = cv.imread('img/messi.jpg')
     gray = cv.cvtColor(image, cv.COLOR_RGB2GRAY)
     ret2, thresh2 = cv.threshold(gray, val, 255, cv.THRESH_BINARY_INV)
     cv.imshow("BinaryInv", thresh2)

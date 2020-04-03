@@ -6,7 +6,7 @@ alpha_slider_max = 125
 # Generar una imagen binaria normal sobre la cámara, usando ambos métodos de umbral adaptativo, controlando el tamaño de bloque con una barra deslizante
 
 def adaptive_mean(val):
-    image = cv.imread('messi.jpg')
+    image = cv.imread('img/messi.jpg')
     gray = cv.cvtColor(image, cv.COLOR_RGB2GRAY)
     # primer metodo adaptativo MEAN
     adapt = cv.adaptiveThreshold(gray, alpha_slider_max, cv.ADAPTIVE_THRESH_MEAN_C, cv.THRESH_BINARY, val, 0)
@@ -14,7 +14,7 @@ def adaptive_mean(val):
 
 
 def adaptive_gaussian(val):
-    image = cv.imread('messi.jpg')
+    image = cv.imread('img/messi.jpg')
     gray = cv.cvtColor(image, cv.COLOR_RGB2GRAY)
     # segundo metodo adaptativo GAUSSIAN
     adapt = cv.adaptiveThreshold(gray, alpha_slider_max, cv.ADAPTIVE_THRESH_GAUSSIAN_C, cv.THRESH_BINARY, val, 0)
