@@ -8,7 +8,7 @@ import cv2 as cv
 # de radio proporcional a la raíz cuadrada de m00
 
 def exercise_one():
-    image = cv.imread('img/phone.png')
+    image = cv.imread('../static/images/phone.png')
     gray = cv.cvtColor(image, cv.COLOR_RGB2GRAY)
     ret1, thresh1 = cv.threshold(gray, 127, 255, cv.THRESH_BINARY)
     cv.imshow("original", image)
@@ -37,7 +37,7 @@ def exercise_one():
 
 
 def exercise_three():
-    letter_s_one = cv.imread('img/letterSOne.png')
+    letter_s_one = cv.imread('../static/images/letterSOne.png')
     gray1 = cv.cvtColor(letter_s_one, cv.COLOR_RGB2GRAY)
     ret1, thresh1 = cv.threshold(gray1, 127, 255, cv.THRESH_BINARY)
     cv.imshow("letter_s_one", letter_s_one)
@@ -55,7 +55,7 @@ def exercise_three():
         huMoments1[i] = -1 * copysign(1.0, huMoments1[i]) * log10(abs(huMoments1[i]))
         print("letter s1 -> h" + str(i) + " " + str(huMoments1[i]))
 
-    letter_s_two = cv.imread('img/letterSTwo.png')
+    letter_s_two = cv.imread('../static/images/letterSTwo.png')
     gray2 = cv.cvtColor(letter_s_two, cv.COLOR_RGB2GRAY)
     ret2, thresh2 = cv.threshold(gray2, 127, 255, cv.THRESH_BINARY)
     cv.imshow("letter_s_two", letter_s_two)
@@ -79,7 +79,7 @@ def exercise_three():
 # Obtener los invariantes de Hu para una forma, y reconocerla luego en otras imágenes
 
 def exercise_four():
-    letter_s = cv.imread('img/letterSTwo.png')
+    letter_s = cv.imread('../static/images/letterSTwo.png')
     gray1 = cv.cvtColor(letter_s, cv.COLOR_RGB2GRAY)
     ret1, thresh1 = cv.threshold(gray1, 127, 255, cv.THRESH_BINARY)
     contours1, hierarchy = cv.findContours(thresh1, cv.RETR_TREE, cv.CHAIN_APPROX_NONE)
@@ -91,7 +91,7 @@ def exercise_four():
     huMoments = cv.HuMoments(moments)
 #     now in huMoments1 we have letter s invariants
 #     lets use shape match
-    alphabet = cv.imread('img/alphabet.jpg')
+    alphabet = cv.imread('../static/images/alphabet.jpg')
     gray2 = cv.cvtColor(alphabet, cv.COLOR_RGB2GRAY)
     ret2, thresh2 = cv.threshold(gray2, 127, 255, cv.THRESH_BINARY)
     cv.imshow("alphabet", alphabet)
