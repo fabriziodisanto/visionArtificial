@@ -14,6 +14,7 @@ def main():
     cv2.namedWindow(window_name)
     cap = cv2.VideoCapture(0)
     hu_moments = None
+    color_white = (255, 255, 255)
     create_trackbar(trackbar_name, window_name, slider_max)
     # saved_hu_moments = load_hu_moments(file_name="hu_moments.txt")
     saved_hu_moments = []
@@ -28,8 +29,6 @@ def main():
                                          trackbar_value=trackbar_val)
         frame_denoised = denoise(frame=adapt_frame, method=cv2.MORPH_ELLIPSE, radius=10)
         contours = get_contours(frame=frame_denoised, mode=cv2.RETR_TREE, method=cv2.CHAIN_APPROX_NONE)
-        color_white = (255, 255, 255)
-        color_grey = (30, 30, 30)
         if len(contours) > 0:
             biggest_contour = get_biggest_contour(contours=contours)
             hu_moments = get_hu_moments(contour=biggest_contour)
