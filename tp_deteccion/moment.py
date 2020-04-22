@@ -10,11 +10,11 @@ def get_hu_moments(contour):
     return hu_moments
 
 
-def compare_hu_moments(hu_moments, saved_hu_moments, max_diff):
-    for moments in saved_hu_moments:
-        if cv2.matchShapes(hu_moments, moments, cv2.CONTOURS_MATCH_I2, 0) < max_diff:
-            return True
-    return False
+# def compare_hu_moments(hu_moments, saved_hu_moments, max_diff):
+#     for moments in saved_hu_moments:
+#         if cv2.matchShapes(hu_moments, moments, cv2.CONTOURS_MATCH_I2, 0) < max_diff:
+#             return True
+#     return False
 
 
 # def save_moment(hu_moments, file_name):

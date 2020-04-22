@@ -21,11 +21,9 @@ def exercise_one():
     cY = int(M["m01"] / M["m00"])
     # draw the contour and center of the shape on the image
     cv.drawContours(image, [cnt], -1, (0, 0, 255), 2)
-
     cv.circle(image, (cX, cY), int(sqrt(M["m00"])), (255, 0, 0), 2)
     cv.circle(image, (cX, cY), 3, (255, 0, 0), -1)
     cv.putText(image, "center", (cX - 20, cY - 20), cv.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 2)
-
     cv.imshow("Image", image)
     cv.waitKey(0)
 
@@ -33,8 +31,6 @@ def exercise_one():
 # Ídem anterior imprimiendo los invariantes de Hu en lugar de los momentos
 # Para obtener la matriz de Hu usen el siguiente metodo:
 #     huMoments = cv.HuMoments(M)
-
-
 
 def exercise_three():
     letter_s_one = cv.imread('../static/images/letterSOne.png')
@@ -99,7 +95,7 @@ def exercise_four():
     for contour in contours_alphabet:
         moments_alphabet = cv.moments(contour)
         huMoments_alphabet = cv.HuMoments(moments_alphabet)
-        if cv.matchShapes(huMoments, huMoments_alphabet, cv.CONTOURS_MATCH_I2, 0) < 0.8:
+        if cv.matchShapes(contour, cnt1, cv.CONTOURS_MATCH_I2, 0) < 0.4:
             cv.drawContours(alphabet, contour, -1, (0, 0, 255), 2)
             cv.imshow("contornos", alphabet)
             cv.waitKey(0)
