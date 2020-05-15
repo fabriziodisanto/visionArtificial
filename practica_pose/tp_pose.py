@@ -33,7 +33,8 @@ def find_homography():
                 ret, mtx, distortion_coeff, rvecs, tvecs = cv2.calibrateCamera(object_points, image_points,
                                                                                          gray.shape[::-1], None, None)
                 camera_matrix = mtx
-
+                cv2.imshow('drawedCorners', cv2.drawChessboardCorners(frame, (4, 7), corners2, ret2))
+                cv2.waitKey(0)
         if cv2.waitKey(1) & 0xFF == ord('w'):
             rt, reference = cap.read()
             cv2.imshow('reference', reference)
@@ -66,13 +67,19 @@ def find_homography():
                 dst_pts = np.float32([kp2[m.trainIdx].pt for m in good]).reshape(-1, 1, 2)
 
                 M, mask = cv2.findHomography(src_pts, dst_pts)
+                print("-----------homographyMatrix-----------")
                 print(M)
 
                 retval, rotations, translations, normals = cv2.decomposeHomographyMat(M, camera_matrix)
+                print("-----------retval-----------")
                 print(retval)
+                print("-----------rotations-----------")
                 print(rotations)
+                print("-----------translations-----------")
                 print(translations)
+                print("-----------normals-----------")
                 print(normals)
+                break
 
 
 find_homography()
