@@ -76,6 +76,21 @@ def main():
     cv2.waitKey(0)
 
 
+def mainVideo():
+    cap = cv2.VideoCapture(0)
+    cv2.namedWindow('imagen normal')
+    cv2.setMouseCallback('imagen normal', on_click)
+    while True:
+        ret, frame = cap.read()
+        cv2.imshow('imagen normal', frame)
+        global points
+        if len(points) == 4:
+            pts = np.array(points, dtype="float32")
+            cv2.imshow('imagen transformada', four_point_transform(frame, pts))
+        if cv2.waitKey(1) & 0xFF == ord('w'):
+            break
+
+
 def on_click(event, x, y, flag, param):
     if event == cv2.EVENT_LBUTTONDBLCLK:
         global points
@@ -83,4 +98,4 @@ def on_click(event, x, y, flag, param):
 
 
 
-main()
+mainVideo()
