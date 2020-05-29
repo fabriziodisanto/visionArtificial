@@ -60,6 +60,7 @@ def four_point_transform(image, pts):
 points = []
 
 
+# con imagen fija
 def main():
     cv2.namedWindow('frame')
     cv2.setMouseCallback('frame', on_click)
@@ -76,6 +77,7 @@ def main():
     cv2.waitKey(0)
 
 
+# con video en vivo
 def mainVideo():
     cap = cv2.VideoCapture(0)
     cv2.namedWindow('imagen normal')
@@ -98,4 +100,4 @@ def on_click(event, x, y, flag, param):
 
 
 
-mainVideo()
+main()
