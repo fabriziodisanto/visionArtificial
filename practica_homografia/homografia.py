@@ -58,35 +58,85 @@ def four_point_transform(image, pts):
 
 
 points = []
+# points = [(0, 240), (50, 150), (590, 150), (640, 240)]
 
+#
+# def main():
+#     cv2.namedWindow('frame')
+#     cv2.setMouseCallback('frame', on_click)
+#     frame = cv2.imread('../static/images/tenis.jpg')
+#     cv2.imshow('frame', frame)
+#     global points
+#     while len(points) <= 4:
+#         if cv2.waitKey(1) & 0xFF == ord('q'):
+#             if len(points) == 4:
+#                 pts = np.array(points, dtype="float32")
+#                 cv2.imshow('imagen', four_point_transform(frame, pts))
+#                 cv2.waitKey(0)
+#                 break
+#     cv2.waitKey(0)
+#
 
-def main():
-    cv2.namedWindow('frame')
-    cv2.setMouseCallback('frame', on_click)
-    frame = cv2.imread('../static/images/tenis.jpg')
-    cv2.imshow('frame', frame)
-    global points
-    while len(points) <= 4:
+def calibrate_camera():
+    CHECKBOARD = (4, 7)
+
+    cap = cv2.VideoCapture(0)
+
+    objp = np.zeros((CHECKBOARD[0] * CHECKBOARD[1], 3), np.float32)
+    objp[:, :2] = np.mgrid[0:CHECKBOARD[0], 0:CHECKBOARD[1]].T.reshape(-1, 2)
+
+    criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 30, 0.001)
+
+    image_points = []
+    object_points = []
+    camera_matrix = None
+    distortion_coeff = None
+
+    while True:
+        ret, frame = cap.read()
+        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+        cv2.imshow('binary', cv2.flip(gray, 1))
         if cv2.waitKey(1) & 0xFF == ord('q'):
-            if len(points) == 4:
-                pts = np.array(points, dtype="float32")
-                cv2.imshow('imagen', four_point_transform(frame, pts))
+            ret2, corners = cv2.findChessboardCorners(gray, (CHECKBOARD[0], CHECKBOARD[1]))
+            if ret2:
+                corners2 = cv2.cornerSubPix(gray, corners, (11, 11), (-1, -1), criteria)
+                image_points.append(corners2)
+                object_points.append(objp)
+                ret, camera_matrix, distortion_coeff, rotationvecs, translationvecs = \
+                    cv2.calibrateCamera(object_points, image_points, gray.shape[::-1], None, None)
+                cv2.imshow('drawedCorners',
+                           cv2.drawChessboardCorners(frame, (CHECKBOARD[0], CHECKBOARD[1]), corners2, ret2))
+                print("--------------CAMERA MATRIX------------")
+                print(camera_matrix)
+                print("--------------DISTORTION COEFF------------")
+                print(distortion_coeff)
                 cv2.waitKey(0)
-                break
-    cv2.waitKey(0)
+        if cv2.waitKey(1) & 0xFF == ord('w'):
+            (h, w, d) = frame.shape
+            new_camera_matrix, roi = cv2.getOptimalNewCameraMatrix(camera_matrix, distortion_coeff, (w, h), 1, (w, h))
+            return camera_matrix, distortion_coeff, new_camera_matrix
 
 
 def mainVideo():
     cap = cv2.VideoCapture(0)
+    # cap = cv2.VideoCapture('../static/videos/carsRt9_3.avi')
+    camera_matrix = None
+    distortion_coeff = None
+    new_camera_matrix = None
     cv2.namedWindow('imagen normal')
-    cv2.setMouseCallback('imagen normal', on_click)
+    cv2.namedWindow('imagen distorsioned_frame')
+    cv2.setMouseCallback('imagen distorsioned_frame', on_click)
     while True:
+        while camera_matrix is None:
+            camera_matrix, distortion_coeff, new_camera_matrix = calibrate_camera()
+        global points
         ret, frame = cap.read()
         cv2.imshow('imagen normal', frame)
-        global points
+        distorsioned_frame = cv2.undistort(frame, camera_matrix, distortion_coeff, None, new_camera_matrix)
+        cv2.imshow('imagen distorsioned_frame', distorsioned_frame)
         if len(points) == 4:
             pts = np.array(points, dtype="float32")
-            cv2.imshow('imagen transformada', four_point_transform(frame, pts))
+            cv2.imshow('imagen transformada', four_point_transform(distorsioned_frame, pts))
         if cv2.waitKey(1) & 0xFF == ord('w'):
             break
 
@@ -95,7 +145,6 @@ def on_click(event, x, y, flag, param):
     if event == cv2.EVENT_LBUTTONDBLCLK:
         global points
         points.append((x, y))
-
 
 
 mainVideo()
