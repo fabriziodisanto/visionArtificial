@@ -17,8 +17,6 @@ while True:
     tInicial = cv.getTickCount()
     # Aquí se escribe el código para procesar la imagen imWebcam
     imGris = cv.cvtColor(imWebcam, cv.COLOR_BGR2GRAY)
-    #
-    #
 
     # Tiempo de procesamiento
     tFinal = cv.getTickCount()
