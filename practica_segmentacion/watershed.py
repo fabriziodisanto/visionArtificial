@@ -1,7 +1,7 @@
 import numpy as np
 import cv2 as cv
 
-img = cv.imread('/Users/juancruzpisani/projects/Austral/visionArtificial/static/images/water_coins.jpeg')
+img = cv.imread('../static/images/water_coins.jpeg')
 gray = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
 _, thresh = cv.threshold(gray, 0, 255, cv.THRESH_BINARY_INV+cv.THRESH_OTSU)
 
@@ -24,6 +24,7 @@ sure_fg = cv.erode(closing, kernel, iterations=3)
 
 # SE DEBERIA USAR EL DISTANCE TRANSFORM ANTES Q EL ERODE
 # PQ LOS OBJETOS ESTAN TODOS PEGADOS PERO DE BAJA PQ NOSE SI HAY Q EXPLCIAR ESO
+
 # dist_transform = cv.distanceTransform(opening,cv.DIST_L2,5)
 # ret, sure_fg = cv.threshold(dist_transform,0.7*dist_transform.max(),255,0)
 

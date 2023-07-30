@@ -11,8 +11,7 @@ def select_roi():
         if key == ord("s"):
             # select the bounding box of the object we want to track (make
             # sure you press ENTER or SPACE after selecting the ROI)
-            box = cv2.selectROI("Frame", image, fromCenter=False,
-                                showCrosshair=True)
+            box = cv2.selectROI("Frame", image, fromCenter=True, showCrosshair=True)
             print(box)
         if key == ord("q"):
             show_image = False

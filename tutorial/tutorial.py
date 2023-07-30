@@ -6,7 +6,7 @@ import cv2
 # # load the input image and show its dimensions, keeping in mind that
 # # images are represented as a multi-dimensional NumPy array with
 # # shape no. rows (height) x no. columns (width) x no. channels (depth)
-image = cv2.imread("static/images/boca2000.jpg")
+image = cv2.imread("../static/images/boca2000.jpg")
 (h, w, d) = image.shape
 
 

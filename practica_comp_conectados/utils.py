@@ -51,7 +51,8 @@ def draw_component(cX, cY, h, i, image, labels, w, x, y):
 
 
 def get_connected_components(thresh, connectivity, image):
-    (num_labels, labels, stats, centroids) = cv2.connectedComponentsWithStats(image=thresh,
-                                                                              connectivity=connectivity,
-                                                                              ltype=cv2.CV_32S)
+    (num_labels, labels, stats, centroids) = \
+        cv2.connectedComponentsWithStats(image=thresh,
+                                         connectivity=connectivity,
+                                         ltype=cv2.CV_32S)
     analyze_components(num_labels, labels, stats, centroids, image)

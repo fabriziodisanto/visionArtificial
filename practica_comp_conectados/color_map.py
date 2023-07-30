@@ -1,7 +1,7 @@
 import cv2
 from utils import get_connected_components
 
-image = cv2.imread('../static/images/patente.jpeg')
+image = cv2.imread('../static/images/alphabet.jpg')
 gray = cv2.cvtColor(image, cv2.COLOR_RGB2GRAY)
 
 
