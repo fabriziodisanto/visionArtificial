@@ -3,7 +3,7 @@ import cv2 as cv
 
 def aprox_contours(val):
     image = cv.imread('../static/images/rayo.jpg')
-    gray = cv.cvtColor(image, cv.COLOR_RGB2GRAY)
+    gray = cv.cvtColor(image, cv.COLOR_BGR2GRAY)
     ret1, thresh1 = cv.threshold(gray, 127, 255, cv.THRESH_BINARY)
     contours, hierarchy = cv.findContours(thresh1, cv.RETR_TREE, cv.CHAIN_APPROX_NONE)
     for cnt in contours:
