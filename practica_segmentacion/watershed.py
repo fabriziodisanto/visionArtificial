@@ -1,57 +1,91 @@
+import cv2
 import numpy as np
-import cv2 as cv
 
-img = cv.imread('../static/images/water_coins.jpeg')
-gray = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
-_, thresh = cv.threshold(gray, 0, 255, cv.THRESH_BINARY_INV+cv.THRESH_OTSU)
-
-cv.imshow("img", thresh)
-
-cv.waitKey()
-# noise removal
-kernel = np.ones((3, 3), np.uint8)
-opening = cv.morphologyEx(thresh, cv.MORPH_OPEN, kernel, iterations=2)
-closing = cv.morphologyEx(opening, cv.MORPH_CLOSE, kernel, iterations=2)
-
-# sure background area
-sure_bg = cv.dilate(closing, kernel, iterations=3)
-
-cv.imshow("sure_bg", sure_bg)
-
-cv.waitKey()
-# Finding sure foreground area
-sure_fg = cv.erode(closing, kernel, iterations=3)
-
-# SE DEBERIA USAR EL DISTANCE TRANSFORM ANTES Q EL ERODE
-# PQ LOS OBJETOS ESTAN TODOS PEGADOS PERO DE BAJA PQ NOSE SI HAY Q EXPLCIAR ESO
-
-# dist_transform = cv.distanceTransform(opening,cv.DIST_L2,5)
-# ret, sure_fg = cv.threshold(dist_transform,0.7*dist_transform.max(),255,0)
+base_colours = [[255, 0, 0],
+                [0, 255, 0],
+                [0, 0, 255],
+                [255, 255, 255],
+                [0, 0, 0],
+                [100, 255, 0],
+                [100, 0, 255],
+                [0, 100, 255],
+                [0, 255, 100],
+                [255, 100, 0]]
+frame_window = 'Frame-Window'
+seeds_map_window = 'Seeds-Map-Window'
+watershed_result_window = 'Watershed-Result-Window'
 
 
-cv.imshow("sure_fg", sure_fg)
+def watershed(img):
+    markers = cv2.watershed(img, np.int32(seeds))
 
-cv.waitKey()
-# Finding unknown region
-sure_fg = np.uint8(sure_fg)
-unknown = cv.subtract(sure_bg, sure_fg)
+    img[markers == -1] = [0, 0, 255]
+    for n in range(1, 10):
+        img[markers == n] = base_colours[n]
 
-# Marker labelling
-_, markers = cv.connectedComponents(sure_fg)
-print(markers)
-print("------------------")
-# Add one to all labels so that sure background is not 0, but 1
-markers = markers+1
-# Now, mark the region of unknown with zero
-markers[unknown == 255] = 0
+    cv2.imshow(watershed_result_window, img)
 
-markers = cv.watershed(img, markers)
+    cv2.waitKey()
 
-print(img)
-print(markers)
 
-img[markers == -1] = [255, 0, 0]
+def click_event(event, x, y, _flags, _params):
+    if event == cv2.EVENT_LBUTTONDOWN:
+        val = int(chr(selected_key))
+        points.append(((x, y), val))
+        cv2.circle(seeds, (x, y), 7, (val, val, val), thickness=-1)
 
-cv.imshow("img", img)
 
-cv.waitKey()
+def main():
+    global points
+    global seeds
+    global frame
+    global selected_key
+    selected_key = 49  # 1 en ASCII
+    points = []
+    # seeds = np.zeros((312, 252), np.uint8)
+    seeds = np.zeros((720, 1280), np.uint8)
+    cv2.namedWindow(frame_window)
+    cv2.namedWindow(seeds_map_window)
+
+    cap = cv2.VideoCapture(0)
+    cv2.setMouseCallback(frame_window, click_event)
+
+    while True:
+        _, frame = cap.read()
+        # frame = cv2.imread('../static/images/water_coins.jpeg')
+        frame_copy = frame.copy()
+        seeds_copy = seeds.copy()
+
+        for point in points:
+            color = point[1]
+            val = point[1] * 20
+
+            x = point[0][0]
+            y = point[0][1]
+            cv2.circle(frame_copy, (x, y), 7, val, thickness=-1)
+            cv2.circle(seeds_copy, (x, y), 7, val, thickness=-1)
+            cv2.putText(frame_copy, str(point[1]), (x - 20, y - 20), cv2.FONT_HERSHEY_SIMPLEX, 0.7,
+                        color, 3)
+
+        cv2.imshow(frame_window, frame_copy)
+        map = cv2.applyColorMap(seeds_copy, cv2.COLORMAP_JET)
+        cv2.imshow(seeds_map_window, map)
+
+        key = cv2.waitKey(100) & 0xFF
+        if key == 32:
+            watershed(frame.copy())
+            points = []
+            # seeds = np.zeros((1198, 1198), np.uint8)
+            seeds = np.zeros((480, 640), np.uint8)
+
+        if ord('1') <= key <= ord('9'):
+            selected_key = key
+
+        if key == ord('q'):
+            break
+
+    cap.release()
+
+
+if __name__ == '__main__':
+    main()
