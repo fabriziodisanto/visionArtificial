@@ -15,8 +15,9 @@ def get_trackbar_value(trackbar_name, window_name):
 
 loop = True
 
+
 trackbar_window_name = 'Trackbars'
-cv2.namedWindow('1')
+cv2.namedWindow(trackbar_window_name)
 thresh_name = 'OG Threshold'
 thresh_slider_max = 255
 create_trackbar(thresh_name, trackbar_window_name, thresh_slider_max)
