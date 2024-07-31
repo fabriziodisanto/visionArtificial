@@ -46,6 +46,9 @@ def main():
                       COLOR_RED,
                       2)
 
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
+
         cv2.imshow(WINDOW_NAME, frame)
 
     cap.release()
