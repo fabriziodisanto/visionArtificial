@@ -6,16 +6,20 @@ def get_contours(frame, mode, method):
     return contours
 
 
-def get_biggest_contour(contours):
-    max_cnt = contours[0]
+def filter_contours_by_area(contours, min_area, max_area):
+    filtered_contours = []
     for cnt in contours:
-        if cv2.contourArea(cnt) > cv2.contourArea(max_cnt):
-            max_cnt = cnt
-    return max_cnt
+        if min_area <= cv2.contourArea(cnt) <= max_area:
+            filtered_contours.append(cnt)
+    return filtered_contours
 
 
 def compare_contours(contour_to_compare, saved_contours, max_diff):
     for contour in saved_contours:
-        if cv2.matchShapes(contour_to_compare, contour, cv2.CONTOURS_MATCH_I2, 0) < max_diff:
+        if cv2.matchShapes(contour_to_compare, contour, cv2.CONTOURS_MATCH_I1) < max_diff:
             return True
     return False
+
+
+def get_bounding_rect(contour):
+    return cv2.boundingRect(contour)

@@ -7,7 +7,7 @@ alpha_slider_max = 125
 
 def adaptive_mean(val):
     image = cv.imread('../static/images/messi.jpg')
-    gray = cv.cvtColor(image, cv.COLOR_RGB2GRAY)
+    gray = cv.cvtColor(image, cv.COLOR_BGR2GRAY)
     # primer metodo adaptativo MEAN
     adapt = cv.adaptiveThreshold(gray, alpha_slider_max, cv.ADAPTIVE_THRESH_MEAN_C, cv.THRESH_BINARY, val, 0)
     cv.imshow("Mean", adapt)
@@ -15,7 +15,7 @@ def adaptive_mean(val):
 
 def adaptive_gaussian(val):
     image = cv.imread('../static/images/messi.jpg')
-    gray = cv.cvtColor(image, cv.COLOR_RGB2GRAY)
+    gray = cv.cvtColor(image, cv.COLOR_BGR2GRAY)
     # segundo metodo adaptativo GAUSSIAN
     adapt = cv.adaptiveThreshold(gray, alpha_slider_max, cv.ADAPTIVE_THRESH_GAUSSIAN_C, cv.THRESH_BINARY, val, 0)
     cv.imshow("Gaussian", adapt)

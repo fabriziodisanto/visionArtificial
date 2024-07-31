@@ -12,8 +12,9 @@ def apply_color_convertion(frame, color):
     return cv2.cvtColor(frame, color)
 
 
-def adaptive_threshold(frame, slider_max, adaptative, binary, trackbar_value):
-    return cv2.adaptiveThreshold(frame, slider_max, adaptative, binary, trackbar_value, 0)
+def threshold(frame, slider_max, binary, trackbar_value):
+    _, th = cv2.threshold(frame, trackbar_value, slider_max, binary)
+    return th
 
 
 def draw_contours(frame, contours, color, thickness):

@@ -10,4 +10,4 @@ def on_trackbar(val):
 
 
 def get_trackbar_value(trackbar_name, window_name):
-    return int(cv2.getTrackbarPos(trackbar_name, window_name) / 2) * 2 + 3
+    return int(cv2.getTrackbarPos(trackbar_name, window_name))
