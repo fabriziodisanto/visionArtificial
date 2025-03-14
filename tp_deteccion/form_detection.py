@@ -50,8 +50,6 @@ def main():
     star_tol_max = 100
     create_trackbar(trackbar_star_tol_name, window_name, star_tol_max)
 
-    # load model
-    model = load('filename.joblib')
 
     while True:
         # frame = cv2.imread('./test1.png')
@@ -80,12 +78,10 @@ def main():
                                                     max_area=trackbar_max_area_val)
 
         for cont in filtered_contours:
-            #cont -> sacar momentos
-            #mom -> huMom
-            #huMom -> logaritmo
-            #model.predict(huMomLog) = 1 2 3 4
-            #pasar de label a nombres y pintar contornos
-
+            triangle_score = cv2.matchShapes(cont, TRIANGLE_CONTOUR, cv2.CONTOURS_MATCH_I1, 0) - trackbar_triangle_tol_val
+            square_score = cv2.matchShapes(cont, SQUARE_CONTOUR, cv2.CONTOURS_MATCH_I1, 0) - trackbar_square_tol_val
+            star_score = cv2.matchShapes(cont, STAR_CONTOUR, cv2.CONTOURS_MATCH_I1, 0) - trackbar_star_tol_val
+            min_score = min(triangle_score, square_score, star_score)
             x, y, w, h = get_bounding_rect(cont)
 
             if min_score > SCORE_LIMIT:
