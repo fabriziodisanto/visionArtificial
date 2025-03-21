@@ -1,9 +1,12 @@
 import cv2
+import numpy as np
+import math
 
 from contour import get_contours, filter_contours_by_area, get_bounding_rect
 from frame_editor import apply_color_convertion, threshold, denoise, draw_contours
 from saved_contours import get_saved_contour
 from trackbar import create_trackbar, get_trackbar_value
+from ml_model import train_model, int_to_label
 
 # BGR
 COLOR_GREEN = (0, 255, 0)
@@ -21,6 +24,7 @@ def main():
     window_name = 'Window'
     cv2.namedWindow(window_name)
     cap = cv2.VideoCapture(0)
+    model = train_model()
 
     trackbar_thresh_name = 'Threshold'
     thresh_slider_max = 255
@@ -38,33 +42,15 @@ def main():
     contour_max_area_max = 99999
     create_trackbar(trackbar_max_area_name, window_name, contour_max_area_max)
 
-    trackbar_triangle_tol_name = 'Triangle Tolerance'
-    triangle_tol_max = 100
-    create_trackbar(trackbar_triangle_tol_name, window_name, triangle_tol_max)
-
-    trackbar_square_tol_name = 'Square Tolerance'
-    square_tol_max = 100
-    create_trackbar(trackbar_square_tol_name, window_name, square_tol_max)
-
-    trackbar_star_tol_name = 'Star Tolerance'
-    star_tol_max = 100
-    create_trackbar(trackbar_star_tol_name, window_name, star_tol_max)
-
 
     while True:
-        # frame = cv2.imread('./test1.png')
         ret, frame = cap.read()
-        gray_frame = apply_color_convertion(frame=frame, color=cv2.COLOR_RGB2GRAY)
-
+        
+        gray_frame = apply_color_convertion(frame=frame, color=cv2.COLOR_BGR2GRAY)
+        
         trackbar_thresh_val = get_trackbar_value(trackbar_name=trackbar_thresh_name, window_name=window_name)
         trackbar_min_area_val = get_trackbar_value(trackbar_name=trackbar_min_area_name, window_name=window_name)
         trackbar_max_area_val = get_trackbar_value(trackbar_name=trackbar_max_area_name, window_name=window_name)
-        trackbar_triangle_tol_val = float(get_trackbar_value(trackbar_name=trackbar_triangle_tol_name,
-                                                             window_name=window_name) / 100)
-        trackbar_square_tol_val = float(get_trackbar_value(trackbar_name=trackbar_square_tol_name,
-                                                           window_name=window_name) / 100)
-        trackbar_star_tol_val = float(get_trackbar_value(trackbar_name=trackbar_star_tol_name,
-                                                         window_name=window_name) / 100)
 
         thresh_frame = threshold(frame=gray_frame, slider_max=thresh_slider_max,
                                  binary=cv2.THRESH_BINARY,
@@ -78,10 +64,11 @@ def main():
                                                     max_area=trackbar_max_area_val)
 
         for cont in filtered_contours:
-            triangle_score = cv2.matchShapes(cont, TRIANGLE_CONTOUR, cv2.CONTOURS_MATCH_I1, 0) - trackbar_triangle_tol_val
-            square_score = cv2.matchShapes(cont, SQUARE_CONTOUR, cv2.CONTOURS_MATCH_I1, 0) - trackbar_square_tol_val
-            star_score = cv2.matchShapes(cont, STAR_CONTOUR, cv2.CONTOURS_MATCH_I1, 0) - trackbar_star_tol_val
+            triangle_score = cv2.matchShapes(cont, TRIANGLE_CONTOUR, cv2.CONTOURS_MATCH_I1, 0)
+            square_score = cv2.matchShapes(cont, SQUARE_CONTOUR, cv2.CONTOURS_MATCH_I1, 0)
+            star_score = cv2.matchShapes(cont, STAR_CONTOUR, cv2.CONTOURS_MATCH_I1, 0)
             min_score = min(triangle_score, square_score, star_score)
+
             x, y, w, h = get_bounding_rect(cont)
 
             if min_score > SCORE_LIMIT:
