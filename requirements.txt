@@ -1,3 +1,5 @@
 numpy
 opencv-contrib-python
 imutils
+
+#prueba a ver si cambio el codigooooo soy orne
