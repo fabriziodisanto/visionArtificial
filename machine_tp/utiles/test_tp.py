@@ -2,12 +2,12 @@ import cv2
 import numpy as np
 import glob
 
-from machine.utils.hu_moments_generation import hu_moments_of_file
-from utils.label_converters import int_to_label
+from utiles.hu_moments_tp import hu_moments_of_file
+from utiles.labels_tp import int_to_label
 
 
 def load_and_test(model):
-    files = glob.glob('../machine/shapes/testing/*')
+    files = glob.glob('../machine_tp/shapes.tp/testeo_tp/*')
     for f in files:
         hu_moments = hu_moments_of_file(f) # Genera los momentos de hu de los files de testing
         sample = np.array([hu_moments], dtype=np.float32) # numpy
