@@ -1,5 +1,6 @@
 import numpy as np
 import cv2
+import os
 
 
 def order_points(pts):
@@ -60,22 +61,25 @@ def four_point_transform(image, pts):
 points = []
 # points = [(0, 240), (50, 150), (590, 150), (640, 240)]
 
-#
-# def main():
-#     cv2.namedWindow('frame')
-#     cv2.setMouseCallback('frame', on_click)
-#     frame = cv2.imread('../static/images/tenis.jpg')
-#     cv2.imshow('frame', frame)
-#     global points
-#     while len(points) <= 4:
-#         if cv2.waitKey(1) & 0xFF == ord('q'):
-#             if len(points) == 4:
-#                 pts = np.array(points, dtype="float32")
-#                 cv2.imshow('imagen', four_point_transform(frame, pts))
-#                 cv2.waitKey(0)
-#                 break
-#     cv2.waitKey(0)
-#
+def main():
+    path = os.path.join(os.path.dirname(__file__), '../static/images/tenis.jpg')
+    frame = cv2.imread(path)
+    cv2.namedWindow('frame')
+    cv2.setMouseCallback('frame', on_click)
+
+    while len(points) < 4:
+        canvas = frame.copy()
+        for p in points:
+            cv2.circle(canvas, p, 4, (0, 0, 255), -1)
+        cv2.imshow('frame', canvas)
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            return
+
+    pts = np.array(points[:4], dtype="float32")
+    cv2.imshow('imagen', four_point_transform(frame, pts))
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
+
 
 def calibrate_camera():
     CHECKBOARD = (4, 7)
@@ -142,9 +146,9 @@ def mainVideo():
 
 
 def on_click(event, x, y, flag, param):
-    if event == cv2.EVENT_LBUTTONDBLCLK:
-        global points
+    if event == cv2.EVENT_LBUTTONDOWN:
         points.append((x, y))
 
 
-mainVideo()
+# mainVideo()
+main()
